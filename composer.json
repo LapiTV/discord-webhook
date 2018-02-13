@@ -1,0 +1,15 @@
+{
+    "name": "isak/discord-webhook-lapi",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "WFrancois",
+            "email": "wroblewski.francois@gmail.com"
+        }
+    ],
+    "require": {
+        "php-curl-class/php-curl-class": "^8.0",
+        "symfony/dotenv": "^4.0"
+    }
+}
