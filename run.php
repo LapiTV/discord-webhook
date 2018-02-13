@@ -15,6 +15,7 @@ $curl->setDefaultJsonDecoder(true);
 $curl->get('https://api.twitter.com/1.1/statuses/user_timeline.json', [
     'screen_name' => 'lapitv',
     'since_id' => $db['maxId'] ?? 0,
+    'count' => 20,
 ]);
 
 $maxId = 0;
