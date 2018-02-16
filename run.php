@@ -38,6 +38,7 @@ foreach ($tweets as $tweet) {
     }
 
     $time = new \DateTime($tweet['created_at']);
+    $time->setTimezone(new \DateTimeZone('Europe/Paris'));
 
     sendWebhook([
         'username' => $usernameDisplay,
