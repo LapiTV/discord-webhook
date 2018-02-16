@@ -18,6 +18,7 @@ $curl->get('https://api.twitter.com/1.1/statuses/user_timeline.json', [
     'count' => 20,
     'exclude_replies' => true,
     'include_rts' => false,
+    'tweet_mode' => 'extended',
 ]);
 
 $maxId = 0;
@@ -26,7 +27,8 @@ $tweets = array_reverse($curl->response);
 
 foreach ($tweets as $tweet) {
     $id = $tweet['id'];
-    $text = html_entity_decode($tweet['text']);
+
+    $text = html_entity_decode($tweet['full_text'] ?? $tweet['text'] ?? '');
     $usernameDisplay = $tweet['user']['name'];
     $screenName = $tweet['user']['screen_name'];
     $avatar = $tweet['user']['profile_image_url_https'];
