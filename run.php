@@ -16,13 +16,17 @@ $curl->get('https://api.twitter.com/1.1/statuses/user_timeline.json', [
     'screen_name' => 'lapitv',
     'since_id' => $db['maxId'] ?? 0,
     'count' => 20,
+    'exclude_replies' => true,
+    'include_rts' => false,
 ]);
 
 $maxId = 0;
 
-foreach ($curl->response as $tweet) {
+$tweets = array_reverse($curl->response);
+
+foreach ($tweets as $tweet) {
     $id = $tweet['id'];
-    $text = $tweet['text'];
+    $text = html_entity_decode($tweet['text']);
     $usernameDisplay = $tweet['user']['name'];
     $screenName = $tweet['user']['screen_name'];
     $avatar = $tweet['user']['profile_image_url_https'];
@@ -52,11 +56,8 @@ foreach ($curl->response as $tweet) {
 
     if($id > $maxId) {
         $maxId = $id;
+        setDb('maxId', $maxId);
     }
-}
-
-if(!empty($maxId)) {
-    setDb('maxId', $maxId);
 }
 
 function sendWebhook($data)
