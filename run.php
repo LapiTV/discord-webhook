@@ -26,8 +26,9 @@ $maxId = 0;
 $tweets = array_reverse($curl->response);
 
 foreach ($tweets as $tweet) {
-    $id = $tweet['id'];
+    $urlWebhook = getenv('WEBHOOK_GENERAL');
 
+    $id = $tweet['id'];
     $text = html_entity_decode($tweet['full_text'] ?? $tweet['text'] ?? '');
     $usernameDisplay = $tweet['user']['name'];
     $screenName = $tweet['user']['screen_name'];
@@ -35,14 +36,24 @@ foreach ($tweets as $tweet) {
     $url = 'https://twitter.com/' . $screenName . '/status/' . $id;
 
     $media = '';
-    if(!empty($tweet['entities']['media'][0]['media_url_https'])) {
+    if (!empty($tweet['entities']['media'][0]['media_url_https'])) {
         $media = $tweet['entities']['media'][0]['media_url_https'];
     }
 
     $time = new \DateTime($tweet['created_at']);
     $time->setTimezone(new \DateTimeZone('Europe/Paris'));
 
-    sendWebhook([
+    $entitiesUrls = !empty($tweet['entities']['urls']) ? $tweet['entities']['urls'] : [];
+
+    foreach ($entitiesUrls as $entitiesUrl) {
+        if(strpos($entitiesUrl['expanded_url'], 'twitch.tv/w_lapin') !== false) {
+            $urlWebhook = getenv('WEBHOOK_ANNONCES_ET_LIVE');
+        }
+
+        $text = str_replace($entitiesUrl['url'], $entitiesUrl['expanded_url'], $text);
+    }
+
+    sendWebhook($urlWebhook, [
         'username' => $usernameDisplay,
         'avatar_url' => $avatar,
         'embeds' => [
@@ -57,17 +68,17 @@ foreach ($tweets as $tweet) {
         ],
     ]);
 
-    if($id > $maxId) {
+    if ($id > $maxId) {
         $maxId = $id;
         setDb('maxId', $maxId);
     }
 }
 
-function sendWebhook($data)
+function sendWebhook($urlWebhook, $data)
 {
     $curl = new \Curl\Curl();
     $curl->setHeader('Content-Type', 'application/json');
-    $curl->post(getenv('WEBHOOK'), $data);
+    $curl->post($urlWebhook, $data);
 
     var_dump($curl->response);
 }
