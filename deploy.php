@@ -8,7 +8,7 @@ require 'recipe/common.php';
 set('application', 'discord-webhook-lapi');
 
 // Project repository
-set('repository', 'git@github.com:WFrancois/discord-webhook-lapi.git');
+set('repository', 'git@github.com:LapiTV/discord-webhook.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', true);
