@@ -46,7 +46,7 @@ foreach ($tweets as $tweet) {
     $entitiesUrls = !empty($tweet['entities']['urls']) ? $tweet['entities']['urls'] : [];
 
     foreach ($entitiesUrls as $entitiesUrl) {
-        if(strpos($entitiesUrl['expanded_url'], 'twitch.tv/w_lapin') !== false) {
+        if(strpos($entitiesUrl['expanded_url'], 'twitch.tv/lapi') !== false) {
             $urlWebhook = getenv('WEBHOOK_ANNONCES_ET_LIVE');
         }
 
