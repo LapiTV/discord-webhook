@@ -26,6 +26,12 @@ $maxId = 0;
 $tweets = array_reverse($curl->response);
 
 foreach ($tweets as $tweet) {
+    if (empty($tweet['id'])) {
+        // Twitter may return an "Over capacity" message that doesn't contain an id
+        // Skip it
+        continue;
+    }
+
     $urlWebhook = getenv('WEBHOOK_GENERAL');
 
     $id = $tweet['id'];
